@@ -3,14 +3,13 @@ from decimal import Decimal as Dec
 from sqlalchemy import Column, String
 
 from ipponmanager.dataaccess import Base, DataModelMixin
-from ipponmanager.dataaccess import get_session
 
 
 class Tournament(Base, DataModelMixin):
     """ data class for tournaments.
     """
     title = Column(
-        String,
+        String(50),
         default=u(''),
         doc=u('Title of the tournament.'))
     organiser = Column(
@@ -83,14 +82,3 @@ class Registration(Base, DataModelMixin):
         self.competitor = competitor
         self.weight = weight
         self.participation = participation
-
-
-if __name__ == '__main__':
-    session = get_session()
-    t = Tournament(
-        title=u('Vereinsmeisterschaften'),
-        organiser=u('JC Ettlingen'),
-        description=u('Vereinsmeisterschaften des JC Ettlingen'))
-    session.add(t)
-    session.commit()
-    print(t.id)
