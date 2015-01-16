@@ -39,7 +39,7 @@ class DataModelMixin(object):
 
 
 class DalSqlAlchemy(object):
-    """ Data Access Layer class for SQLAlchemy based data objects.
+    """ Simple Data Access Layer class for SQLAlchemy based data objects.
     """
 
     def __init__(self, connection_string='sqlite:///:memory:'):
@@ -62,5 +62,41 @@ class DalSqlAlchemy(object):
         :return: the new data model instance
         """
         obj = klass(**kwargs)
-        self._session.add(obj)
         return obj
+
+    def add(self, instance):
+        """ Adds a new data model instance to the database.
+        :param instance: the instance to be added
+        :return:
+        """
+        self.get_session().add(instance)
+
+    def get(self, klass, key):
+        """ Retrieve an instance by its key
+        :param klass: type of the instance
+        :param key: identifying key of the instance
+        :return: data model instance or None if no instance with this key was
+                 found.
+        """
+        return self.get_session.query(klass).get(key)
+
+    def get_slice(self, klass, start=0, stop=0):
+        """ Retrieve a slice of data model instances of a class from the
+            database.
+        :param klass: type of the instance
+        :param start: first instance's offset (used for slices)
+        :param stop: last instance's offset (+1), if 0: ignore start and get all
+        :return: a list of data model instances found
+        """
+        if stop == 0:
+            return self.get_all(klass)
+        else:
+            return self.get_session.query(klass).slice(start, stop)
+
+    def get_all(self, klass):
+        """ Retrieve all data model instances of a class from the
+            database.
+        :param klass: type of the instance
+        :return: a list of data model instances found
+        """
+        return self.get_session.query(klass).all()
