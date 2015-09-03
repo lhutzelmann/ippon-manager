@@ -6,7 +6,8 @@ from ipponmanager.dataaccess import Base, DataModelMixin
 
 
 class Tournament(Base, DataModelMixin):
-    """ data class for tournaments.
+    """
+    data class for tournaments.
     """
     title = Column(
         String(50),
